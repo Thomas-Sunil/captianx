@@ -31,7 +31,7 @@ const AccordionSection: React.FC = () => {
   };
 
   return (
-    <div className="relative bg-white py-16 px-4 sm:px-8 md:px-16 lg:px-24 flex flex-col lg:flex-row justify-between items-start overflow-hidden">
+    <div className="relative bg-transparent py-16 px-4 sm:px-8 md:px-16 lg:px-24 flex flex-col lg:flex-row justify-between items-start overflow-hidden">
       {/* Absolute positioned blurred background element with radial gradient */}
       <div 
         className="absolute hidden lg:block" 
@@ -48,7 +48,7 @@ const AccordionSection: React.FC = () => {
       ></div>
 
       {/* Left Content */}
-      <div className="w-full lg:w-5/12 mb-12 lg:mb-0 relative z-10">
+      <div className="w-full lg:w-5/12 mb-12 lg:mb-0 relative z-10 bg-transparent">
         <p className="text-purple-700 text-sm font-semibold mb-2">Key value</p>
         <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-900 leading-tight mb-6">
           Why Choose <br className="hidden sm:inline" />CaptainX
