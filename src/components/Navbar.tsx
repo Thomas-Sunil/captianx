@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import ArrowDownIcon from '../assets/vector.svg';
-import CompanyLogo from '../assets/Group 1597883762 (1).jpg';
+import CompanyLogo from '../assets/Group 1597883762 (1).svg';
 import MenuIcon from '../assets/Group 1597888033.svg';
 import CloseIcon from '../assets/Vector.svg';
 

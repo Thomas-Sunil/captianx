@@ -52,14 +52,14 @@ const ContactComponent = () => {
         </p>
         <Link
           to="/contact"
-          className="group inline-flex items-center justify-center px-8 py-3 h-14
+          className="group inline-flex items-center justify-center px-4 py-3 h-14
                      bg-[#6843EC] rounded-full text-white text-lg font-medium shadow-lg
                      transition-all duration-300 ease-in-out hover:scale-105"
         >
           Lets Talk
           <div className="ml-4 h-10 w-10 bg-white rounded-full flex items-center justify-center">
             <svg
-              className="h-5 w-5 text-[#6843EC] transition-transform duration-300 ease-in-out group-hover:rotate-45"
+              className="h-5 w-5 text-[#6843EC] transition-transform duration-300 ease-in-out group-hover:translate-x-1"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -69,7 +69,7 @@ const ContactComponent = () => {
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
               />
             </svg>
           </div>
