@@ -41,6 +41,18 @@ const LandingPage: React.FC = () => {
           <LazyAccordionSection />
         </EnhancedSectionWrapper>
       </LazyLoader>
+      {/* SolutionsSection - Cards and content staggered */}
+      <LazyLoader>
+        <EnhancedSectionWrapper 
+          delay={0}
+          imageDelay={0}
+          textDelay={200}
+          staggerDelay={100}
+          threshold={0.3}
+        >
+          <LazySolutionsSection />
+        </EnhancedSectionWrapper>
+      </LazyLoader>
 
       {/* CompanyComponent - Logos/images from top, text from bottom */}
       <LazyLoader>
@@ -55,18 +67,7 @@ const LandingPage: React.FC = () => {
         </EnhancedSectionWrapper>
       </LazyLoader>
 
-      {/* SolutionsSection - Cards and content staggered */}
-      <LazyLoader>
-        <EnhancedSectionWrapper 
-          delay={0}
-          imageDelay={0}
-          textDelay={200}
-          staggerDelay={100}
-          threshold={0.3}
-        >
-          <LazySolutionsSection />
-        </EnhancedSectionWrapper>
-      </LazyLoader>
+      
       
       {/* ProductCarousel - Product images top-to-bottom */}
       <LazyLoader>

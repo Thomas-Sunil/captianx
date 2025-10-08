@@ -48,55 +48,100 @@ const ProductCarousel = () => {
   const [dragOffset, setDragOffset] = useState(0);
   const [transitionEnabled, setTransitionEnabled] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(false); // New state to track mobile view
 
   const carouselContainerRef = useRef(null);
   const carouselInnerRef = useRef(null);
   const videoRef = useRef(null);
 
   const totalProducts = productsData.length;
+  const transitionDuration = 700; // ms
 
   const getNextIndex = useCallback((currentIndex) => (currentIndex + 1) % totalProducts, [totalProducts]);
   const getPrevIndex = useCallback((currentIndex) => (currentIndex - 1 + totalProducts) % totalProducts, [totalProducts]);
 
   const getTargetTranslateX = useCallback(() => {
-    if (!carouselInnerRef.current) return 0;
+    if (!carouselContainerRef.current || !carouselInnerRef.current) return 0;
 
-    const prevPeekElement = carouselInnerRef.current.children[0];
-    const mainCardElement = carouselInnerRef.current.children[1];
-    const gap = 24;
+    const containerWidth = carouselContainerRef.current.offsetWidth;
+    const mainCardElement = carouselInnerRef.current.children[1]; // The main card is always the second child
+    const prevPeekElement = carouselInnerRef.current.children[0]; // The previous peek card
 
-    if (!prevPeekElement || !mainCardElement) return 0;
+    if (!mainCardElement) return 0;
 
-    const prevCardWidth = prevPeekElement.offsetWidth;
-    const offsetToAlignMainCard = prevCardWidth + gap;
+    const mainCardWidth = mainCardElement.offsetWidth;
+    const gap = 24; // Tailwind gap-6 is 24px
 
-    return -offsetToAlignMainCard;
+    let offsetToAlignMainCard = 0; // This is the distance from the start of the carouselInner to the start of the mainCard
+
+    // Determine if peek elements are actively displayed.
+    // We check the offsetWidth of the prevPeekElement. If it's 0, it's hidden (e.g., via `display: none` from `hidden md:block`).
+    const peekElementsAreVisible = prevPeekElement && prevPeekElement.offsetWidth > 0;
+
+    if (peekElementsAreVisible) {
+      const prevCardWidth = prevPeekElement.offsetWidth;
+      offsetToAlignMainCard = prevCardWidth + gap;
+    }
+
+    // Calculate the translation needed to place the *center* of the main card at the *center* of the container.
+    // The main card's *current* center within the carouselInner is `offsetToAlignMainCard + mainCardWidth / 2`.
+    // The desired position for this center is `containerWidth / 2`.
+    // So, the translation needed is `(containerWidth / 2) - (current center of main card)`.
+    const centerOfMainCardInInner = offsetToAlignMainCard + (mainCardWidth / 2);
+    const centerOffset = (containerWidth / 2) - centerOfMainCardInInner;
+
+    return centerOffset;
+
   }, []);
 
-  const basePositionTranslateX = useRef(getTargetTranslateX());
+  const basePositionTranslateX = useRef(0);
 
+  // Effect for initial calculation and handling resize
   useEffect(() => {
-    basePositionTranslateX.current = getTargetTranslateX();
-    setDragOffset(0);
-    setTransitionEnabled(true);
-    setIsTransitioning(true);
+    const handleResize = () => {
+      // Determine if we are in a mobile view based on a breakpoint (e.g., md breakpoint)
+      // This check needs to match Tailwind's internal breakpoint for `md:block`
+      setIsMobileView(window.innerWidth < 768); // Tailwind's md breakpoint is 768px
 
-    const transitionDuration = 700;
-    const timer = setTimeout(() => {
-      setIsTransitioning(false);
-    }, transitionDuration);
+      basePositionTranslateX.current = getTargetTranslateX();
+      setDragOffset(0); // Reset drag offset on resize to prevent jumps
+      setTransitionEnabled(true); // Ensure transition is enabled after resize
+      setIsTransitioning(true); // Temporarily enable transition for smooth re-alignment
+      const timer = setTimeout(() => setIsTransitioning(false), transitionDuration);
+      return () => clearTimeout(timer);
+    };
 
-    return () => clearTimeout(timer);
-  }, [activeIndex, getTargetTranslateX]);
+    handleResize(); // Initial calculation
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [activeIndex, getTargetTranslateX]); // activeIndex added as dependency to recalculate when it changes
+
+
+  // Effect to handle transitions when activeIndex changes
+  useEffect(() => {
+    // Only apply transition if not dragging
+    if (!isDragging) {
+      setTransitionEnabled(true);
+      setIsTransitioning(true);
+      const timer = setTimeout(() => {
+        setIsTransitioning(false);
+      }, transitionDuration);
+      return () => clearTimeout(timer);
+    }
+  }, [activeIndex, isDragging]);
+
 
   // Play video when activeIndex changes and transition is complete
   useEffect(() => {
-    if (!isTransitioning && videoRef.current) {
+    if (!isTransitioning && !isDragging && videoRef.current) {
       videoRef.current.play().catch(err => {
-        console.log('Video play failed:', err);
+        console.warn('Video play failed:', err);
       });
+    } else if (videoRef.current) {
+      videoRef.current.pause();
     }
-  }, [activeIndex, isTransitioning]);
+  }, [activeIndex, isTransitioning, isDragging]);
 
   const currentTotalTranslate = basePositionTranslateX.current + dragOffset;
 
@@ -123,14 +168,14 @@ const ProductCarousel = () => {
     } else if (dragOffset > threshold) {
       setActiveIndex(prevIndex => getPrevIndex(prevIndex));
     } else {
-      setDragOffset(0);
+      setDragOffset(0); // Snap back
       setIsTransitioning(true);
-      const transitionDuration = 700;
       const timer = setTimeout(() => {
         setIsTransitioning(false);
       }, transitionDuration);
       return () => clearTimeout(timer);
     }
+    setDragOffset(0); // Reset drag offset for the next interaction
   }, [dragOffset, getNextIndex, getPrevIndex]);
 
   const handleTouchStart = useCallback((e) => handleStart(e.touches[0].clientX), [handleStart]);
@@ -144,6 +189,7 @@ const ProductCarousel = () => {
     if (isDragging) handleEnd();
   }, [isDragging, handleEnd]);
 
+  // Prepare products for rendering (circular loop)
   const visibleProducts = [
     productsData[getPrevIndex(activeIndex)],
     productsData[activeIndex],
@@ -173,17 +219,18 @@ const ProductCarousel = () => {
       >
         <div
           ref={carouselInnerRef}
-          className="relative flex items-center justify-start gap-6"
+          // Conditionally apply justify-center on mobile to truly center the single visible card
+          className={`relative flex items-center gap-6 ${isMobileView ? 'justify-center' : 'justify-start'}`}
           style={{
             transform: `translateX(${currentTotalTranslate}px)`,
-            transition: transitionEnabled ? 'transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
+            transition: transitionEnabled ? `transform ${transitionDuration / 1000}s cubic-bezier(0.4, 0, 0.2, 1)` : 'none',
           }}
         >
-          {/* Previous Product Image Peek */}
+          {/* Previous Product Image Peek - Hidden on small screens */}
           <div
             className="hidden md:block flex-shrink-0 w-64 lg:w-80 h-[450px] rounded-3xl overflow-hidden shadow-xl"
             style={{
-              transition: transitionEnabled ? 'opacity 0.7s ease-out, transform 0.7s ease-out' : 'none',
+              transition: transitionEnabled ? `opacity ${transitionDuration / 1000}s ease-out, transform ${transitionDuration / 1000}s ease-out` : 'none',
               opacity: isTransitioning && !isDragging ? '0.5' : '0.8',
               transform: isTransitioning && !isDragging ? 'scale(0.95)' : 'scale(1)',
             }}
@@ -197,9 +244,9 @@ const ProductCarousel = () => {
 
           {/* Main Product Card */}
           <div
-            className="flex-shrink-0 w-full md:w-[600px] lg:w-[700px] bg-white rounded-3xl shadow-2xl overflow-hidden"
+            className="flex-shrink-0 w-full md:max-w-2xl lg:max-w-3xl bg-white rounded-3xl shadow-2xl overflow-hidden"
             style={{
-                transition: transitionEnabled ? 'transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
+                transition: transitionEnabled ? `transform ${transitionDuration / 1000}s cubic-bezier(0.4, 0, 0.2, 1), opacity ${transitionDuration / 1000}s cubic-bezier(0.4, 0, 0.2, 1)` : 'none',
                 transform: isTransitioning && !isDragging ? 'scale(0.92)' : 'scale(1)',
                 opacity: isTransitioning && !isDragging ? '0.3' : '1',
             }}
@@ -209,6 +256,7 @@ const ProductCarousel = () => {
               <div className="relative w-full md:w-1/2 h-64 md:h-full">
                 {!isTransitioning && !isDragging ? (
                   <video
+                    key={visibleProducts[1].id}
                     ref={videoRef}
                     src={visibleProducts[1].video}
                     className="w-full h-full object-cover"
@@ -252,11 +300,11 @@ const ProductCarousel = () => {
             </div>
           </div>
 
-          {/* Next Product Image Peek */}
+          {/* Next Product Image Peek - Hidden on small screens */}
           <div
             className="hidden md:block flex-shrink-0 w-64 lg:w-80 h-[450px] rounded-3xl overflow-hidden shadow-xl"
             style={{
-              transition: transitionEnabled ? 'opacity 0.7s ease-out, transform 0.7s ease-out' : 'none',
+              transition: transitionEnabled ? `opacity ${transitionDuration / 1000}s ease-out, transform ${transitionDuration / 1000}s ease-out` : 'none',
               opacity: isTransitioning && !isDragging ? '0.5' : '0.8',
               transform: isTransitioning && !isDragging ? 'scale(0.95)' : 'scale(1)',
             }}
