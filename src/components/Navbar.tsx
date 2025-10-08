@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import ArrowDownIcon from '../assets/vector.svg'; // Your desktop arrow icon
 import CompanyLogo from '../assets/Group 1597883762 (1).jpg'; // Your company logo
@@ -90,11 +90,40 @@ const Navbar: React.FC = () => {
   const location = useLocation();
   const isLetsTalkActive = location.pathname === '/contact';
 
+  // --- New State for scroll behavior ---
+  const [isVisible, setIsVisible] = useState(true); // Navbar is visible by default
+  const [prevScrollPos, setPrevScrollPos] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollPos = window.pageYOffset;
+      const isScrollingUp = prevScrollPos > currentScrollPos;
+
+      // Only hide if scrolling down and not at the very top
+      if (currentScrollPos > 60 && !isScrollingUp) { // 60px as a threshold
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+      setPrevScrollPos(currentScrollPos);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    // Clean up the event listener when the component unmounts
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [prevScrollPos]); // Re-run effect if prevScrollPos changes
 
   return (
     <>
       {/* --- Desktop & Mobile Header (always visible) --- */}
-      <header className=" p-4 shadow-sm border-b ">
+      <header
+        className={`
+          fixed top-0 left-0 right-0 z-40 p-4 shadow-sm border-b bg-white
+          transition-transform duration-300 ease-in-out
+          ${isVisible ? 'translate-y-0' : '-translate-y-full'}
+        `}
+      >
         <nav className="container mx-auto flex items-center justify-between flex-wrap">
 
           {/* Mobile Logo (visible on small screens) */}
@@ -134,17 +163,14 @@ const Navbar: React.FC = () => {
             <Link
               to="/contact" // Changed to Link
               className={`
-                className="
                 px-6 py-2
-            bg-white text-black border-black border-1 
                 rounded-full
                 font-fustat text-[15px] font-semibold leading-[1.1] capitalize
                 w-[131px] h-[41px]
                 flex items-center justify-center
                 hover:bg-indigo-700 transition-all duration-300
-              "
                 ${isLetsTalkActive
-                  ? ' bg-white text-black border-black border-1  hover:bg-indigo-700 hover:border-indigo-700'
+                  ? ' bg-indigo-600 text-white border-indigo-600 border-1  hover:bg-indigo-700 hover:border-indigo-700'
                   : 'bg-transparent text-gray-800 border border-gray-800 hover:bg-gray-800 hover:text-white'
                 }
               `}
@@ -162,7 +188,7 @@ const Navbar: React.FC = () => {
         </nav>
       </header>
 
-      {/* --- Mobile Menu Overlay (conditionally rendered) --- */}
+      {/* Mobile Menu Overlay (conditionally rendered) */}
       {isMobileMenuOpen && (
         <div
           className="fixed inset-0 bg-white z-50 transform transition-transform duration-300 ease-in-out"
@@ -170,7 +196,7 @@ const Navbar: React.FC = () => {
           {/* Mobile Menu Header (Logo + Close Button) */}
           <div className="flex justify-between items-center p-4 border-b border-black">
             <Link to="/" onClick={handleCloseMobileMenu}>
-              <img
+              <img  
                 src={CompanyLogo}
                 alt="Company Logo"
                 className="w-[118.9px] h-[19px] object-contain"
@@ -203,7 +229,7 @@ const Navbar: React.FC = () => {
               onClick={handleCloseMobileMenu}
               className="
                 px-6 py-2
-            bg-white text-black border-black border-1 
+                bg-white text-black border-black border-1
                 rounded-full
                 font-fustat text-[15px] font-semibold leading-[1.1] capitalize
                 w-[131px] h-[41px]
