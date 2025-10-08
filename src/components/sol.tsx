@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 
 const SolutionsSection = () => {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);

@@ -1,78 +1,103 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const NewsInsightsCard = ({ title, description, date, index }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    // Outer div for spacing and responsiveness
     <div
-      className="w-full sm:w-1/2 md:w-1/3 lg:w-[358px] p-4 flex justify-center" // w-full on small, w-1/2 on medium, w-1/3 on large. lg:w-[358px] for fixed width on very large screens.
+      className="w-full sm:w-1/2 md:w-1/3 lg:w-[358px] p-4 flex justify-center"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <div
-        className={`relative w-full h-[334px] rounded-xl overflow-hidden shadow-lg
-          transition-all duration-500 ease-in-out
-          ${isHovered ? 'bg-gradient-to-br from-purple-700 to-purple-900 text-white' : 'bg-white text-gray-800 border border-gray-200'}
-        `}
+        className="relative w-full h-[334px] rounded-2xl overflow-hidden shadow-lg transition-all duration-500 ease-in-out"
         style={{
-          // On larger screens, this will override w-full from above if lg:w-[358px] is not set.
-          // For absolute precision on large, we define the inner card's max-width.
-          maxWidth: '358px', // Inner card max width
+          maxWidth: '358px',
+          background: isHovered 
+            ? 'linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%)'
+            : '#FFFFFF',
+          border: isHovered ? 'none' : '1px solid #E5E7EB',
         }}
       >
         <div className="p-6 flex flex-col justify-between h-full" style={{ fontFamily: 'Fustat, sans-serif' }}>
-          <div className={`${isHovered ? 'text-purple-300' : 'text-gray-400'} text-3xl font-bold mb-2`}>
+          {/* Index */}
+          <div 
+            className="text-3xl font-bold mb-2 transition-colors duration-500"
+            style={{ color: isHovered ? 'rgba(196, 181, 253, 0.8)' : '#9CA3AF' }}
+          >
             {`0${index + 1}`}
           </div>
+
+          {/* Title and Description */}
           <div>
-            <h3 className={`font-semibold mb-2 ${isHovered ? 'text-white' : 'text-gray-800'}`}
+            <h3 
+              className="font-semibold mb-2 transition-colors duration-500"
               style={{
                 fontSize: '20px',
                 lineHeight: '31px',
                 letterSpacing: '-0.58px',
+                color: isHovered ? '#FFFFFF' : '#1F2937',
               }}
             >
               {title}
             </h3>
-            <p className={`${isHovered ? 'text-purple-200' : 'text-gray-600'}`}
+            <p 
+              className="transition-colors duration-500"
               style={{
                 fontSize: '20px',
                 lineHeight: '31px',
                 letterSpacing: '-0.58px',
+                color: isHovered ? 'rgba(224, 231, 255, 0.9)' : '#6B7280',
               }}
             >
               {description}
             </p>
           </div>
-          <div className="flex justify-between items-end mt-auto pt-4">
-            <span className={`${isHovered ? 'text-purple-300' : 'text-gray-500'} text-sm`} style={{ fontFamily: 'Fustat, sans-serif' }}>{date}</span>
 
-            <div
-              className={`flex items-center justify-center w-[51px] h-[50px]
-                ${isHovered ? 'bg-white text-purple-700' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}
-              `}
-              style={{
-                position: 'absolute',
-                bottom: '0',
-                right: '0',
-                backgroundColor: isHovered ? 'white' : 'rgb(243 244 246)',
-                borderTopLeftRadius: '11px',
-                border: isHovered ? 'none' : '1px solid rgb(229 231 235)',
+          {/* Date */}
+          <div className="flex justify-between items-end mt-auto pt-4">
+            <span 
+              className="text-sm transition-colors duration-500"
+              style={{ 
+                fontFamily: 'Fustat, sans-serif',
+                color: isHovered ? 'rgba(196, 181, 253, 0.8)' : '#9CA3AF',
               }}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 transform rotate-45"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </div>
+              {date}
+            </span>
+          </div>
+        </div>
+
+        {/* Arrow Button with Visual Gap */}
+        <div
+          className="absolute bottom-0 right-0"
+          style={{
+            width: '67px',
+            height: '66px',
+            background: isHovered ? '#FFFFFF' : 'transparent',
+            borderTopLeftRadius: '16px',
+          }}
+        >
+          <div
+            className="absolute bottom-0 right-0 flex items-center justify-center rounded-tl-xl transition-all duration-300"
+            style={{
+              width: '51px',
+              height: '50px',
+              background: isHovered ? '#FFFFFF' : '#F3F4F6',
+              border: isHovered ? 'none' : '1px solid #E5E7EB',
+            }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 transform rotate-45 transition-colors duration-300"
+              style={{ color: isHovered ? '#7C3AED' : '#6B7280' }}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
           </div>
         </div>
       </div>
@@ -81,8 +106,6 @@ const NewsInsightsCard = ({ title, description, date, index }) => {
 };
 
 const NewsInsightsComponent = () => {
-  const navigate = useNavigate();
-
   const newsItems = [
     {
       title: 'Saudi Pro League',
@@ -101,16 +124,18 @@ const NewsInsightsComponent = () => {
     },
   ];
 
-  const handleViewAllClick = () => {
-    navigate("/news-insights");
-  };
-
   return (
     <section className="py-16 bg-gradient-to-br from-gray-50 to-purple-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-12">
-          <p className="text-sm font-semibold text-purple-600 uppercase tracking-wide" style={{ fontFamily: 'Fustat, sans-serif' }}>News & Insights</p>
-          <h2 className="font-normal text-gray-900 mt-2"
+          <p 
+            className="text-sm font-semibold text-purple-600 uppercase tracking-wide" 
+            style={{ fontFamily: 'Fustat, sans-serif' }}
+          >
+            News & Insights
+          </p>
+          <h2 
+            className="font-normal text-gray-900 mt-2"
             style={{
               fontFamily: 'Fustat, sans-serif',
               fontSize: '56px',
@@ -123,7 +148,7 @@ const NewsInsightsComponent = () => {
         </div>
 
         {/* Responsive flex container */}
-        <div className="flex flex-wrap justify-center -mx-4"> {/* -mx-4 to offset the p-4 on cards */}
+        <div className="flex flex-wrap justify-center -mx-4">
           {newsItems.map((item, index) => (
             <NewsInsightsCard
               key={index}
@@ -137,7 +162,6 @@ const NewsInsightsComponent = () => {
 
         <div className="mt-12 text-right">
           <button
-            onClick={handleViewAllClick}
             className="inline-flex items-center text-lg font-semibold text-purple-700 hover:text-purple-900 transition-colors duration-200"
             style={{ fontFamily: 'Fustat, sans-serif' }}
           >

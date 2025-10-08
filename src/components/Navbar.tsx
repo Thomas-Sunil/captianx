@@ -94,7 +94,7 @@ const Navbar: React.FC = () => {
   return (
     <>
       {/* --- Desktop & Mobile Header (always visible) --- */}
-      <header className="bg-white p-4 shadow-sm border-b border-black sticky top-0 z-50">
+      <header className=" p-4 shadow-sm border-b ">
         <nav className="container mx-auto flex items-center justify-between flex-wrap">
 
           {/* Mobile Logo (visible on small screens) */}

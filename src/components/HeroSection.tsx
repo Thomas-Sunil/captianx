@@ -70,9 +70,12 @@ const HeroSection: React.FC = () => {
             transition: 'all 0.1s ease-out'
           }}
         >
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold text-gray-900 mb-2 sm:mb-4 leading-tight">
-            The <span className="text-purple-700">future</span>, in every <br />athlete.
-          </h1>
+          <h1
+  className="font-bold text-gray-900 mb-2 sm:mb-4
+             font-[Fustat] text-[75px] leading-[116%] tracking-[-0.04em]"
+>
+  The <span className="text-purple-700">future</span>, in every <br />athlete.
+</h1>
           <p className="text-base sm:text-lg md:text-2xl text-gray-700 mb-4 sm:mb-6 md:mb-8 max-w-xl">
             Elevate performance, redefine potential, and build the champions of tomorrow with data-driven technology.
           </p>
