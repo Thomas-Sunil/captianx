@@ -13,15 +13,18 @@ const NewsInsightsCard = ({ title, description, date, index }) => {
         className="relative w-full h-[334px] rounded-2xl overflow-hidden shadow-lg transition-all duration-500 ease-in-out"
         style={{
           maxWidth: '358px',
-          background: isHovered 
-            ? 'linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%)'
+          // Apply gradient directly to the card when hovered
+          background: isHovered
+            ? 'linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%)' // Solid linear gradient
             : '#FFFFFF',
           border: isHovered ? 'none' : '1px solid #E5E7EB',
+          // Card tilt effect remains
+          transform: isHovered ? 'rotateZ(-2deg) translateX(-5px)' : 'rotateZ(0deg) translateX(0)',
         }}
       >
         <div className="p-6 flex flex-col justify-between h-full" style={{ fontFamily: 'Fustat, sans-serif' }}>
           {/* Index */}
-          <div 
+          <div
             className="text-3xl font-bold mb-2 transition-colors duration-500"
             style={{ color: isHovered ? 'rgba(196, 181, 253, 0.8)' : '#9CA3AF' }}
           >
@@ -30,7 +33,7 @@ const NewsInsightsCard = ({ title, description, date, index }) => {
 
           {/* Title and Description */}
           <div>
-            <h3 
+            <h3
               className="font-semibold mb-2 transition-colors duration-500"
               style={{
                 fontSize: '20px',
@@ -41,7 +44,7 @@ const NewsInsightsCard = ({ title, description, date, index }) => {
             >
               {title}
             </h3>
-            <p 
+            <p
               className="transition-colors duration-500"
               style={{
                 fontSize: '20px',
@@ -56,9 +59,9 @@ const NewsInsightsCard = ({ title, description, date, index }) => {
 
           {/* Date */}
           <div className="flex justify-between items-end mt-auto pt-4">
-            <span 
+            <span
               className="text-sm transition-colors duration-500"
-              style={{ 
+              style={{
                 fontFamily: 'Fustat, sans-serif',
                 color: isHovered ? 'rgba(196, 181, 253, 0.8)' : '#9CA3AF',
               }}
@@ -68,43 +71,39 @@ const NewsInsightsCard = ({ title, description, date, index }) => {
           </div>
         </div>
 
-        {/* Arrow Button with Visual Gap */}
+        {/* Separated Arrow Button */}
         <div
-          className="absolute bottom-0 right-0"
+          className="absolute bottom-4 right-4 flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-300"
           style={{
-            width: '67px',
-            height: '66px',
-            background: isHovered ? '#FFFFFF' : 'transparent',
-            borderTopLeftRadius: '16px',
+            // Background color changes based on hover state
+            background: isHovered ? '#FFFFFF' : '#F3F4F6',
+            // Border changes based on hover state
+            border: isHovered ? 'none' : '1px solid #E5E7EB',
           }}
         >
-          <div
-            className="absolute bottom-0 right-0 flex items-center justify-center rounded-tl-xl transition-all duration-300"
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5 transition-colors duration-300"
             style={{
-              width: '51px',
-              height: '50px',
-              background: isHovered ? '#FFFFFF' : '#F3F4F6',
-              border: isHovered ? 'none' : '1px solid #E5E7EB',
+              // Color changes based on hover state
+              color: isHovered ? '#7C3AED' : '#6B7280',
+              // Arrow rotation: right initially, up-right on hover
+              transform: isHovered ? 'rotate(-45deg)' : 'rotate(0deg)',
             }}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth="2"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 transform rotate-45 transition-colors duration-300"
-              style={{ color: isHovered ? '#7C3AED' : '#6B7280' }}
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
-          </div>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
         </div>
       </div>
     </div>
   );
 };
 
+// NewsInsightsComponent remains unchanged
 const NewsInsightsComponent = () => {
   const newsItems = [
     {
@@ -128,13 +127,13 @@ const NewsInsightsComponent = () => {
     <section className="py-16 bg-gradient-to-br from-gray-50 to-purple-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-12">
-          <p 
-            className="text-sm font-semibold text-purple-600 uppercase tracking-wide" 
+          <p
+            className="text-sm font-semibold text-purple-600 uppercase tracking-wide"
             style={{ fontFamily: 'Fustat, sans-serif' }}
           >
             News & Insights
           </p>
-          <h2 
+          <h2
             className="font-normal text-gray-900 mt-2"
             style={{
               fontFamily: 'Fustat, sans-serif',

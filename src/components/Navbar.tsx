@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import ArrowDownIcon from '../assets/vector.svg'; // Your desktop arrow icon
-import CompanyLogo from '../assets/Group 1597883762 (1).jpg'; // Your company logo
-import MenuIcon from '../assets/Group 1597888033.svg'; // Your hamburger menu icon
-import CloseIcon from '../assets/Vector.svg'; // Your close (X) icon SVG
+import ArrowDownIcon from '../assets/vector.svg';
+import CompanyLogo from '../assets/Group 1597883762 (1).jpg';
+import MenuIcon from '../assets/Group 1597888033.svg';
+import CloseIcon from '../assets/Vector.svg';
 
 // --- Desktop NavLink Component ---
 interface NavLinkProps {
@@ -53,14 +53,13 @@ interface MobileNavLinkProps {
   to: string;
   label: string;
   onClose: () => void;
-  hasChevron?: boolean; // For the right-pointing arrow in the mobile list
+  hasChevron?: boolean;
 }
 
 const MobileNavLink: React.FC<MobileNavLinkProps> = ({ to, label, onClose, hasChevron = false }) => {
   const location = useLocation();
   const isActive = location.pathname === to;
 
-  // Placeholder for a simple right-pointing chevron SVG data URI
   const ChevronRightIcon = 'data:image/svg+xml;utf8,<svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.5 1.5L7 5L3.5 8.5" stroke="%239CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
   return (
@@ -90,8 +89,7 @@ const Navbar: React.FC = () => {
   const location = useLocation();
   const isLetsTalkActive = location.pathname === '/contact';
 
-  // --- New State for scroll behavior ---
-  const [isVisible, setIsVisible] = useState(true); // Navbar is visible by default
+  const [isVisible, setIsVisible] = useState(true);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
 
   useEffect(() => {
@@ -99,8 +97,7 @@ const Navbar: React.FC = () => {
       const currentScrollPos = window.pageYOffset;
       const isScrollingUp = prevScrollPos > currentScrollPos;
 
-      // Only hide if scrolling down and not at the very top
-      if (currentScrollPos > 60 && !isScrollingUp) { // 60px as a threshold
+      if (currentScrollPos > 60 && !isScrollingUp) {
         setIsVisible(false);
       } else {
         setIsVisible(true);
@@ -109,24 +106,27 @@ const Navbar: React.FC = () => {
     };
 
     window.addEventListener('scroll', handleScroll);
-
-    // Clean up the event listener when the component unmounts
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [prevScrollPos]); // Re-run effect if prevScrollPos changes
+  }, [prevScrollPos]);
 
   return (
     <>
-      {/* --- Desktop & Mobile Header (always visible) --- */}
+      {/* --- Desktop & Mobile Header with Gradient Fade --- */}
       <header
         className={`
-          fixed top-0 left-0 right-0 z-40 p-4 shadow-sm border-b bg-white
+          fixed top-0 left-0 right-0 z-40 p-4
           transition-transform duration-300 ease-in-out
           ${isVisible ? 'translate-y-0' : '-translate-y-full'}
         `}
+        style={{
+          background: 'linear-gradient(to bottom, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.95) 50%, rgba(255, 255, 255, 0.7) 75%, rgba(255, 255, 255, 0.3) 90%, rgba(255, 255, 255, 0) 100%)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+        }}
       >
         <nav className="container mx-auto flex items-center justify-between flex-wrap">
 
-          {/* Mobile Logo (visible on small screens) */}
+          {/* Mobile Logo */}
           <div className="md:hidden flex items-center flex-shrink-0 mr-auto">
             <Link to="/" onClick={handleCloseMobileMenu}>
               <img
@@ -137,7 +137,7 @@ const Navbar: React.FC = () => {
             </Link>
           </div>
 
-          {/* Desktop Logo (visible on medium screens and up) */}
+          {/* Desktop Logo */}
           <div className="hidden md:flex items-center flex-shrink-0 mr-6">
             <Link to="/">
               <img
@@ -148,20 +148,19 @@ const Navbar: React.FC = () => {
             </Link>
           </div>
 
-          {/* Desktop Navigation Links (Hidden on small screens) */}
+          {/* Desktop Navigation Links */}
           <div className="hidden md:flex flex-grow justify-center items-center space-x-8">
             <DesktopNavLink to="/products" label="Products" hasArrow />
-            {/* Separated Company and Partners */}
             <DesktopNavLink to="/company" label="Company" hasArrow />
             <DesktopNavLink to="/partners" label="Partners" hasArrow />
             <DesktopNavLink to="/news-insights" label="News & Insights" hasArrow />
             <DesktopNavLink to="/careers" label="Careers" hasArrow />
           </div>
 
-          {/* Desktop Let's Talk Button (Hidden on small screens) */}
+          {/* Desktop Let's Talk Button */}
           <div className="hidden md:flex items-center">
             <Link
-              to="/contact" // Changed to Link
+              to="/contact"
               className={`
                 px-6 py-2
                 rounded-full
@@ -179,7 +178,7 @@ const Navbar: React.FC = () => {
             </Link>
           </div>
 
-          {/* Mobile Menu Button (Hamburger Icon) - visible on small screens */}
+          {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center">
             <button onClick={() => setIsMobileMenuOpen(true)} className="p-2 -mr-2">
               <img src={MenuIcon} alt="Open menu" className="w-[34.2px] h-[19px] object-contain" />
@@ -188,12 +187,12 @@ const Navbar: React.FC = () => {
         </nav>
       </header>
 
-      {/* Mobile Menu Overlay (conditionally rendered) */}
+      {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <div
           className="fixed inset-0 bg-white z-50 transform transition-transform duration-300 ease-in-out"
         >
-          {/* Mobile Menu Header (Logo + Close Button) */}
+          {/* Mobile Menu Header */}
           <div className="flex justify-between items-center p-4 border-b border-black">
             <Link to="/" onClick={handleCloseMobileMenu}>
               <img  
@@ -211,10 +210,9 @@ const Navbar: React.FC = () => {
             </button>
           </div>
 
-          {/* Mobile Navigation Links List */}
+          {/* Mobile Navigation Links */}
           <nav className="flex flex-col mt-4">
             <MobileNavLink to="/products" label="Products" onClose={handleCloseMobileMenu} hasChevron />
-            {/* Keep these separate as they were already */}
             <MobileNavLink to="/company" label="Company" onClose={handleCloseMobileMenu} hasChevron />
             <MobileNavLink to="/partners" label="Partners" onClose={handleCloseMobileMenu} hasChevron />
             <MobileNavLink to="/people" label="People" onClose={handleCloseMobileMenu} hasChevron />
@@ -224,7 +222,7 @@ const Navbar: React.FC = () => {
 
           {/* Let's Talk Button (Mobile) */}
           <div className="absolute bottom-10 left-0 right-0 flex justify-center p-4">
-            <Link // Changed to Link
+            <Link
               to="/contact"
               onClick={handleCloseMobileMenu}
               className="
