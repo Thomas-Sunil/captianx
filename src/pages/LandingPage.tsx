@@ -4,14 +4,14 @@ import LazyLoader from '../components/LazyLoader';
 import EnhancedSectionWrapper from '../components/EnhancedSectionWrapper';
 
 // Use React.lazy for each component
-const LazyHeroSection = React.lazy(() => import('../components/HeroSection'));
-const LazyAccordionSection = React.lazy(() => import('../components/AccordionSection'));
-const LazyCompanyComponent = React.lazy(() => import('../components/CompanyComponent'));
-const LazyContactComponent = React.lazy(() => import('../components/ContactComponent'));
-const LazyPartnerComponent = React.lazy(() => import('../components/PartnerComponent'));
-const LazyProductCarousel = React.lazy(() => import('../components/ProductCarousel'));
-const LazySolutionsSection = React.lazy(() => import('../components/sol'));
-const LazyNewsInsightsComponent = React.lazy(() => import('../components/newscomp'));
+const LazyHeroSection = React.lazy(() => import('../components/LandingPageComponents/HeroSection'));
+const LazyAccordionSection = React.lazy(() => import('../components/LandingPageComponents/AccordionSection'));
+const LazyCompanyComponent = React.lazy(() => import('../components/LandingPageComponents/CompanyComponent'));
+const LazyContactComponent = React.lazy(() => import('../components/LandingPageComponents/ContactComponent'));
+const LazyPartnerComponent = React.lazy(() => import('../components/LandingPageComponents/PartnerComponent'));
+const LazyProductCarousel = React.lazy(() => import('../components/LandingPageComponents/ProductCarousel'));
+const LazySolutionsSection = React.lazy(() => import('../components/LandingPageComponents/sol'));
+const LazyNewsInsightsComponent = React.lazy(() => import('../components/LandingPageComponents/newscomp'));
 
 const LandingPage: React.FC = () => {
   return (

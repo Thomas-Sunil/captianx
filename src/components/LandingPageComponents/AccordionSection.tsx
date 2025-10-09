@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import PlusIcon from '../assets/Vector 2729.svg'; // Your SVG for the plus icon
+import PlusIcon from '../../assets/Vector 2729.svg'; // Your SVG for the plus icon
 
 // Define the data for the accordion
 const accordionData = [

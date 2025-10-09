@@ -1,1 +1,13 @@
 @import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes custom-float {
+  0%, 100% { transform: translateY(0) translateX(-50%); }
+  50% { transform: translateY(-20px) translateX(-50%); }
+}
+
+.animate-custom-float {
+  animation: custom-float 3s ease-in-out infinite;
+}

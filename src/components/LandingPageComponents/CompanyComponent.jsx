@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import companyImage from '../assets/Oracle_Riyadh-Innovation-Hub.png'; // Adjust path if necessary
+import companyImage from '../../assets/Oracle_Riyadh-Innovation-Hub.png'; // Adjust path if necessary
 
 const CompanyComponent = () => {
   const navigate = useNavigate();

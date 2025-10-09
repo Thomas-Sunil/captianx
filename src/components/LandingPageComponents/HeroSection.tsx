@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import HeroVideo from '../assets/2932301-uhd_4096_2160_24fps.mp4'; // your background video
+import HeroVideo from '../../assets/2932301-uhd_4096_2160_24fps.mp4'; // your background video
 
 const HeroSection: React.FC = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
